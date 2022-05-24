@@ -51,8 +51,8 @@ class HurdleRegression(BaseEstimator):
                  'RFClassifier': RandomForestClassifier(n_estimators=200, n_jobs=6),
                  'GBMRegressor': GradientBoostingRegressor(n_estimators=200),
                  'GBMClassifier': GradientBoostingClassifier(n_estimators=200),
-                 'XGBRegressor': XGBRegressor(n_estimators=200,tree_method='hist',n_jobs=nj),
-                 'XGBClassifier': XGBClassifier(n_estimators=200,tree_method='hist',n_jobs=nj),
+                 'XGBRegressor': XGBRegressor(n_estimators=100,learning_rate=0.05,n_jobs=nj),
+                 'XGBClassifier': XGBClassifier(n_estimators=100,learning_rate=0.05,n_jobs=nj),
                  'HGBRegressor': HistGradientBoostingRegressor(max_iter=200),
                  'HGBClassifier': HistGradientBoostingClassifier(max_iter=200),
                 }
