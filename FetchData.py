@@ -46,7 +46,7 @@ def FetchData(run_id):
         sources = []
         af = {
             'name': 'all features',
-            'dataset': Datasets[11]['df'],
+            'dataset': Datasets[10]['df'],
             'n_comp': 20
         }
         sources.append(af)
