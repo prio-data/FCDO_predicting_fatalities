@@ -35,7 +35,7 @@ def FetchData(run_id):
         Datasets.append(FetchTable((Queryset("hh_fatalities_vdem_short", "country_month")),'vdem_short'))
         Datasets.append(FetchTable((Queryset("hh_topic_model_short", "country_month")),'topics_short'))
         Datasets.append(FetchTable((Queryset("hh_broad", "country_month")),'broad'))
-        Datasets.append(FetchTable((Queryset("hh_prs", "country_month")),'prs'))
+#        Datasets.append(FetchTable((Queryset("hh_prs", "country_month")),'prs'))
         Datasets.append(FetchTable((Queryset("hh_greatest_hits", "country_month")),'gh'))
         Datasets.append(FetchTable((Queryset("hh_20_features", "country_month")),'hh20'))
         Datasets.append(FetchTable((Queryset("hh_all_features", "country_month")),'all_features'))
