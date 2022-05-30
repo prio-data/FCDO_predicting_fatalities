@@ -1,0 +1,51 @@
+,modelname,algorithm,depvar,queryset,data_train,Algorithm_text,RunResult_calib,predstore_calib,RunResult_test,predstore_test,RunResult_future,predstore_future
+0,fat_jed_hh_baseline_lgbm,LGBMRegressor(n_estimators=200),ln_ged_sb_dep,hh_fat_pgm_baseline,baseline,LGBMRegressor(n_estimators=200),RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_baseline_lgbm_calib,RunResult(training_date = 2022-05-16),pgm_fat_jed_hh_baseline_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_baseline_lgbm_f506
+1,fat_jed_hh_conflictlong_lgbm,LGBMRegressor(n_estimators=200),ln_ged_sb_dep,hh_fat_pgm_conflictlong,conflictlong,LGBMRegressor(n_estimators=200),RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_conflictlong_lgbm_calib,RunResult(training_date = 2022-05-17),pgm_fat_jed_hh_conflictlong_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_conflictlong_lgbm_f506
+2,fat_jed_hh_conflictlong_hurdle_lgbm,"HurdleRegression(clf_name='LGBMClassifier', clf_params={'n_estimators': 200},
+                 reg_name='LGBMRegressor', reg_params={'n_estimators': 200})",ln_ged_sb_dep,hh_fat_pgm_conflictlong,conflictlong,"HurdleRegression(clf_name='LGBMClassifier', clf_params={'n_estimators': 200},
+                 reg_name='LGBMRegressor', reg_params={'n_estimators': 200})",RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_conflictlong_hurdle_lgbm_calib,RunResult(training_date = 2022-05-17),pgm_fat_jed_hh_conflictlong_hurdle_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_conflictlong_hurdle_lgbm_f506
+3,fat_jed_hh_drought_hurdle_lgbm,"HurdleRegression(clf_name='LGBMClassifier', clf_params={'n_estimators': 200},
+                 reg_name='LGBMRegressor', reg_params={'n_estimators': 200})",ln_ged_sb_dep,fat_escwa_drought_vulnerability_pgm,escwa_drought,"HurdleRegression(clf_name='LGBMClassifier', clf_params={'n_estimators': 200},
+                 reg_name='LGBMRegressor', reg_params={'n_estimators': 200})",RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_drought_hurdle_lgbm_calib,RunResult(training_date = 2022-05-17),pgm_fat_jed_hh_drought_hurdle_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_drought_hurdle_lgbm_f506
+4,fat_jed_hh_drought_lgbm,LGBMRegressor(n_estimators=200),ln_ged_sb_dep,fat_escwa_drought_vulnerability_pgm,escwa_drought,LGBMRegressor(n_estimators=200),RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_drought_lgbm_calib,RunResult(training_date = 2022-05-18),pgm_fat_jed_hh_drought_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_drought_lgbm_f506
+5,fat_jed_hh_natsoc_hurdle_lgbm,"HurdleRegression(clf_name='LGBMClassifier', clf_params={'n_estimators': 200},
+                 reg_name='LGBMRegressor', reg_params={'n_estimators': 200})",ln_ged_sb_dep,hh_fat_pgm_natsoc,natsoc,"HurdleRegression(clf_name='LGBMClassifier', clf_params={'n_estimators': 200},
+                 reg_name='LGBMRegressor', reg_params={'n_estimators': 200})",RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_natsoc_hurdle_lgbm_calib,RunResult(training_date = 2022-05-18),pgm_fat_jed_hh_natsoc_hurdle_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_natsoc_hurdle_lgbm_f506
+6,fat_jed_hh_natsoc_lgbm,LGBMRegressor(n_estimators=200),ln_ged_sb_dep,hh_fat_pgm_natsoc,natsoc,LGBMRegressor(n_estimators=200),RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_natsoc_lgbm_calib,RunResult(training_date = 2022-05-18),pgm_fat_jed_hh_natsoc_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_natsoc_lgbm_f506
+7,fat_jed_hh_broad_hurdle_lgbm,"HurdleRegression(clf_name='LGBMClassifier', clf_params={'n_estimators': 200},
+                 reg_name='LGBMRegressor', reg_params={'n_estimators': 200})",ln_ged_sb_dep,hh_fat_pgm_broad,broad,"HurdleRegression(clf_name='LGBMClassifier', clf_params={'n_estimators': 200},
+                 reg_name='LGBMRegressor', reg_params={'n_estimators': 200})",RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_broad_hurdle_lgbm_calib,RunResult(training_date = 2022-05-18),pgm_fat_jed_hh_broad_hurdle_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_broad_hurdle_lgbm_f506
+8,fat_jed_hh_broad_lgbm,LGBMRegressor(n_estimators=200),ln_ged_sb_dep,hh_fat_pgm_broad,broad,LGBMRegressor(n_estimators=200),RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_broad_lgbm_calib,RunResult(training_date = 2022-05-18),pgm_fat_jed_hh_broad_lgbm_test,RunResult(training_date = 2022-02-23),pgm_fat_jed_hh_broad_lgbm_f506
+9,fat_jed_pv_conf_hist_pgm,"XGBRegressor(base_score=None, booster=None, colsample_bylevel=None,
+             colsample_bynode=None, colsample_bytree=None,
+             enable_categorical=False, gamma=None, gpu_id=None,
+             importance_type=None, interaction_constraints=None,
+             learning_rate=None, max_delta_step=None, max_depth=None,
+             min_child_weight=None, missing=nan, monotone_constraints=None,
+             n_estimators=200, n_jobs=12, num_parallel_tree=None,
+             predictor=None, random_state=None, reg_alpha=None, reg_lambda=None,
+             scale_pos_weight=None, subsample=None, tree_method='hist',
+             validate_parameters=None, verbosity=None)",ln_ged_sb_dep,paola_fatalities_conflict_history,paola_conf_hist,"XGBRegressor(base_score=None, booster=None, colsample_bylevel=None,
+             colsample_bynode=None, colsample_bytree=None,
+             enable_categorical=False, gamma=None, gpu_id=None,
+             importance_type=None, interaction_constraints=None,
+             learning_rate=None, max_delta_step=None, max_depth=None,
+             min_child_weight=None, missing=nan, monotone_constraints=None,
+             n_estimators=200, n_jobs=12, num_parallel_tree=None,
+             predictor=None, random_state=None, reg_alpha=None, reg_lambda=None,
+             scale_pos_weight=None, subsample=None, tree_method='hist',
+             validate_parameters=None, verbosity=None)",RunResult(training_date = 2022-03-18),pgm_fat_jed_pv_conf_hist_pgm_calib,RunResult(training_date = 2022-05-18),pgm_fat_jed_pv_conf_hist_pgm_test,RunResult(training_date = 2022-03-18),pgm_fat_jed_pv_conf_hist_pgm_f506
+10,fat_tree_lags_d_1_d_2_hur_36,"HurdleRegression(clf_name='XGBClassifier',
+                 clf_params={'n_estimators': 200, 'n_jobs': 12},
+                 reg_name='XGBRegressor',
+                 reg_params={'n_estimators': 200, 'n_jobs': 12})",ln_ged_sb_dep,jim_pgm_conflict_treelag_d_1_d_2,conf_treelag,"HurdleRegression(clf_name='XGBClassifier',
+                 clf_params={'n_estimators': 200, 'n_jobs': 12},
+                 reg_name='XGBRegressor',
+                 reg_params={'n_estimators': 200, 'n_jobs': 12})",RunResult(training_date = 2022-02-09),pgm_fat_tree_lags_d_1_d_2_hur_36_calib,RunResult(training_date = 2022-05-18),pgm_fat_tree_lags_d_1_d_2_hur_36_test,RunResult(training_date = 2022-02-23),pgm_fat_tree_lags_d_1_d_2_hur_36_f506
+11,fat_sptime_dist_nu1_10_001_hur_36,"HurdleRegression(clf_name='XGBClassifier',
+                 clf_params={'n_estimators': 200, 'n_jobs': 12},
+                 reg_name='XGBRegressor',
+                 reg_params={'n_estimators': 200, 'n_jobs': 12})",ln_ged_sb_dep,jim_pgm_conflict_target_sptime_dist_nu1_10_001,conf_sptime_dist,"HurdleRegression(clf_name='XGBClassifier',
+                 clf_params={'n_estimators': 200, 'n_jobs': 12},
+                 reg_name='XGBRegressor',
+                 reg_params={'n_estimators': 200, 'n_jobs': 12})",RunResult(training_date = 2022-02-09),pgm_fat_sptime_dist_nu1_10_001_hur_36_calib,RunResult(training_date = 2022-05-18),pgm_fat_sptime_dist_nu1_10_001_hur_36_test,RunResult(training_date = 2022-02-23),pgm_fat_sptime_dist_nu1_10_001_hur_36_f506

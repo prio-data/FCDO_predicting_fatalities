@@ -7,9 +7,14 @@ from sklearn.base import BaseEstimator
 from sklearn.utils.estimator_checks import check_estimator
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor
-
-
-#from lightgbm import LGBMClassifier, LGBMRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.ensemble import HistGradientBoostingClassifier
+from xgboost import XGBRegressor
+from xgboost import XGBClassifier
+from xgboost import XGBRFRegressor, XGBRFClassifier
+from lightgbm import LGBMClassifier, LGBMRegressor
 
 
 class HurdleRegression(BaseEstimator):
@@ -45,16 +50,17 @@ class HurdleRegression(BaseEstimator):
 
         funcs = {'linear': LinearRegression(),
                  'logistic': LogisticRegression(solver='liblinear'),
-#                 'LGBMRegressor': LGBMRegressor(n_estimators=50),
-#                 'LGBMClassifier': LGBMClassifier(n_estimators=50)
+                 'LGBMRegressor': LGBMRegressor(n_estimators=50),
+                 'LGBMClassifier': LGBMClassifier(n_estimators=50),
                  'RFRegressor': RandomForestRegressor(n_estimators=200, n_jobs=6),
                  'RFClassifier': RandomForestClassifier(n_estimators=200, n_jobs=6),
                  'GBMRegressor': GradientBoostingRegressor(n_estimators=200),
                  'GBMClassifier': GradientBoostingClassifier(n_estimators=200),
-                 'XGBRegressor': XGBRegressor(n_estimators=100,learning_rate=0.05,n_jobs=nj),
-                 'XGBClassifier': XGBClassifier(n_estimators=100,learning_rate=0.05,n_jobs=nj),
+                 'XGBRegressor': XGBRegressor(n_estimators=100,learning_rate=0.05,n_jobs=6),
+                 'XGBClassifier': XGBClassifier(n_estimators=100,learning_rate=0.05,n_jobs=6),
                  'HGBRegressor': HistGradientBoostingRegressor(max_iter=200),
                  'HGBClassifier': HistGradientBoostingClassifier(max_iter=200),
+
                 }
 
         return funcs[func_name]

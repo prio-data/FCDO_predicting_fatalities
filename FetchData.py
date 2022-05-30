@@ -100,6 +100,79 @@ def FetchData(run_id):
 
         return(Datasets)
 
+def FetchData_pgm(run_id):
+    print('Fetching data using querysets; returns as list of dictionaries containing datasets')
+    Datasets = []
+    if run_id == 'Fatalities001':
+        Datasets.append(FetchTable((Queryset("hh_fat_pgm_baseline", "priogrid_month")),'baseline'))
+        Datasets.append(FetchTable((Queryset("hh_fat_pgm_conflictlong", "priogrid_month")),'conflictlong'))
+        Datasets.append(FetchTable((Queryset("fat_escwa_drought_vulnerability_pgm", "priogrid_month")),'escwa_drought'))
+        Datasets.append(FetchTable((Queryset("hh_fat_pgm_natsoc", "priogrid_month")),'natsoc'))
+        Datasets.append(FetchTable((Queryset("hh_fat_pgm_broad", "priogrid_month")),'broad'))
+        Datasets.append(FetchTable((Queryset("paola_fatalities_conflict_history", "priogrid_month")),'paola_conf_hist'))
+        Datasets.append(FetchTable((Queryset("jim_pgm_conflict_treelag_d_1_d_2", "priogrid_month")),'conf_treelag'))
+        Datasets.append(FetchTable((Queryset("jim_pgm_conflict_target_sptime_dist_nu1_10_001", "priogrid_month")),'conf_sptime_dist'))
+
+        return(Datasets)
+
+def get_training_data(Datasets, ModelList, model_name):
+    for model in ModelList:
+        if model['modelname'] == model_name:
+            ds_name = model['data_train']
+
+            for item in Datasets:
+
+                if item['Name'] == ds_name:
+                    return item['df']
+            else:
+                print('dataset not found')
+                return None
+    else:
+        print('model', model_name, 'not found')
+        return None
+
+def data_integrity_check(dataset, depvar):
+    if depvar not in dataset['df'].columns:
+        print(depvar, 'not found in', dataset['Name'])
+        return
+
+    if dataset['df'].columns[0] != depvar:
+        print('Reordering columns in model', dataset['Name'])
+        depvar_column = dataset['df'].pop(depvar)
+        dataset['df'].insert(0, depvar, depvar_column)
+
+    if 'country_id' in dataset['df'].columns:
+        print('country_id found in dataset for ', dataset['Name'], '- dropping')
+        dataset['df'] = dataset['df'].drop(['country_id', ], 1)
+
+    for column in dataset['df'].columns:
+        if dataset['df'][column].isna().sum() != 0:
+            print('WARNING - NaN/Null data detected in', dataset['Name'], 'column', column)
+
+    return
+
+
+def index_check(model, df_with_wanted_index):
+    level0_name_wanted, level1_name_wanted = df_with_wanted_index.index.names
+
+    for key in model.keys():
+        try:
+            df_index = model[key].index
+
+            level0_name_have, level1_name_have = df_index.names
+
+            if (level0_name_have != level0_name_wanted) or (level1_name_have != level1_name_wanted):
+                print('Repairing index in ', key, 'from', model['modelname'])
+                print('original:', level0_name_have, level1_name_have)
+                print('fixed:', level0_name_wanted, level1_name_wanted)
+
+                model[key].index.set_names([level0_name_wanted, level1_name_wanted], inplace=True)
+
+        except:
+            pass
+
+    return
+
 def PCA(source, Standard_features, EndOfPCAData):
     df = source['dataset'].loc[121:EndOfPCAData].copy()
     df = df.replace([np.inf, -np.inf], 0) 

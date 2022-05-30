@@ -14,7 +14,7 @@ from views_partitioning import data_partitioner, legacy
 from stepshift import views
 import views_dataviz
 from views_runs import storage, ModelMetadata
-from views_runs.storage import store, retrieve, list, fetch_metadata
+from views_runs.storage import store, retrieve, fetch_metadata
 from views_forecasts.extensions import *
 
 
@@ -79,6 +79,30 @@ def RetrieveStoredPredictions(ModelList,steps,EndOfHistory,run_id):
     print('All done')
     return(ModelList)
 
+def RetrieveStoredPredictions_pgm(ModelList, steps, EndOfHistory, run_id, level, get_future):
+    ''' This function retrieves the predictions stored in ViEWS prediction storage for all models in the list passed to it.
+    It assumes that each element in the list is a dictionary that contains a model['modelname'] '''
+    i = 0
+    stepcols = ['ln_ged_sb_dep']
+    for step in steps:
+        stepcols.append('step_pred_' + str(step))
+    for model in ModelList:
+        print(i, model['modelname'])
+        stored_modelname_calib = level + '_' + model['modelname'] + '_calib'
+        stored_modelname_test = level + '_' + model['modelname'] + '_test'
+        stored_modelname_future = level + '_' + model['modelname'] + '_f' + str(EndOfHistory)
+        model['predictions_calib_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_calib, run=run_id)[
+                stepcols]
+        model['predictions_calib_df'].replace([np.inf, -np.inf], 0, inplace=True)
+        model['predictions_test_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_test, run=run_id)[
+                stepcols]
+        model['predictions_test_df'].replace([np.inf, -np.inf], 0, inplace=True)
+        if get_future:
+            model['predictions_future_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_future, run=run_id)
+            model['predictions_future_df'].replace([np.inf, -np.inf], 0, inplace=True)
+        i = i + 1
+    print('All done')
+    return (ModelList)
 
     # Calibration
 def CalibratePredictions(ModelList, FutureStart, steps):
@@ -149,3 +173,126 @@ def CalibratePredictions(ModelList, FutureStart, steps):
                 )
             model['calibration_gams'].append(calibration_gam_dict)
     return(ModelList)
+
+
+# calibration of pgm predictions using cm predictions:
+def calibrate_pg_with_c(df_pgm, df_cm, column, df_pg_id_c_id=None, log_feature=False, super_calibrate=False):
+    try:
+        assert df_pgm.index.names[0] == 'month_id'
+    except AssertionError:
+        raise ValueError(f"Expected pgm df to have month_id as 1st index")
+
+    try:
+        assert df_pgm.index.names[1] in ['priogrid_gid', 'priogrid_id', 'pg_id']
+    except AssertionError:
+        raise ValueError(f"Expected pgm df to have one of priogrid_gid, priogrid_id, pg_id as 2nd index")
+
+    try:
+        assert df_cm.index.names[0] == 'month_id'
+    except AssertionError:
+        raise ValueError(f"Expected cm df to have month_id as 1st index")
+
+    try:
+        assert df_cm.index.names[1] in ['country_id', 'c_id']
+    except AssertionError:
+        raise ValueError(f"Expected cm df to have one of country_id, c_id as 2nd index")
+
+    try:
+        assert column in df_pgm.columns
+    except AssertionError:
+        raise ValueError(f"Specified column not in pgm df")
+
+    try:
+        assert column in df_cm.columns
+    except AssertionError:
+        raise ValueError(f"Specified column not in cm df")
+
+    input_months_cm = list(set(df_cm.index.get_level_values(0)))
+    input_months_pgm = list(set(df_pgm.index.get_level_values(0)))
+
+    input_months_cm.sort()
+    input_months_pgm.sort()
+
+    try:
+        assert input_months_cm == input_months_pgm
+    except AssertionError:
+        raise ValueError(f"Inconsistent months found in input dfs")
+
+    input_countries = list(set(df_cm.index.get_level_values(1)))
+    input_pgs = list(set(df_pgm.index.get_level_values(1)))
+    input_pgs.sort()
+
+    if df_pg_id_c_id is None:
+        print('Fetching pd-month-->country-month df from service')
+        df_pg_id_c_id = fetch_df_pg_id_c_id()
+
+    pg_size = len(input_pgs)
+
+    normalised = np.zeros((df_pgm[column].size))
+
+    if log_feature:
+        df_to_calib = pd.DataFrame(index=df_pgm.index, columns=[column, ], data=np.exp(df_pgm[column].values) - 1)
+        df_calib_from = pd.DataFrame(index=df_cm.index, columns=[column, ], data=np.exp(df_cm[column].values) - 1)
+    else:
+        df_to_calib = pd.DataFrame(index=df_pgm.index, columns=[column, ], data=df_pgm[column].values)
+        df_calib_from = pd.DataFrame(index=df_cm.index, columns=[column, ], data=df_cm[column].values)
+
+    for imonth, month in enumerate(input_months_pgm):
+
+        istart = imonth * pg_size
+        iend = istart + pg_size
+
+        normalised_month = np.zeros((pg_size))
+
+        df_data_month_pgm = pd.DataFrame(df_to_calib[column].loc[month])
+
+        values_month_pgm = df_to_calib[column].loc[month].values.reshape(pg_size)
+
+        df_data_month_cm = pd.DataFrame(df_calib_from[column].loc[month])
+
+        map_month = df_pg_id_c_id.loc[month].values.reshape(pg_size)
+
+        input_countries = list(set(df_data_month_cm.index.get_level_values(0)))
+
+        for country in input_countries:
+            month_country = df_data_month_cm[column].loc[country]
+            mask = (map_month == country)
+
+            nmask = np.count_nonzero(mask)
+
+            pg_sum = np.sum(values_month_pgm[mask])
+
+            value_month_cm = df_calib_from[column].loc[month, country]
+
+            if pg_sum > 0:
+                normalisation = value_month_cm / pg_sum * np.ones((nmask))
+
+                normalised_month[mask] = values_month_pgm[mask] * normalisation
+
+        if super_calibrate:
+            sum_month_cm = np.sum(df_data_month_cm[column])
+            if np.sum(normalised_month) > 0:
+                normalisation = sum_month_cm / np.sum(normalised_month)
+                normalised_month *= normalisation
+
+        normalised[istart:iend] = normalised_month
+
+    if log_feature:
+        normalised = np.log(normalised + 1)
+
+    df_out = pd.DataFrame(index=df_pgm.index, columns=[column, ], data=normalised)
+
+    return df_out
+
+
+# helper function for pgm-cm calibration, which fetches country-ids for pg-ids
+def fetch_df_pg_id_c_id():
+    qs = (Queryset("jed_pgm_cm", "priogrid_month")
+          .with_column(Column("country_id", from_table="country_month", from_column="country_id")
+
+                       )
+          )
+
+    df_pg_id_c_id = qs.publish().fetch()
+
+    return df_pg_id_c_id
