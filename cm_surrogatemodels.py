@@ -208,6 +208,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         
         Prediction = Ensemble_df[f'step_pred_{step}']
         for IVset in IV_list:
+            print('s' + str(step) + ' ' + IVset['Name']
             ModelDict = { 
                 'Modelname':   's' + str(step) + ' ' + IVset['Name'],
                 'Step':        step,
