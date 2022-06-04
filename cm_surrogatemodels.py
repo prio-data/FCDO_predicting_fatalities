@@ -54,7 +54,7 @@ from genetic2 import *
 
 from pathlib import Path
 
-def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps, NumberOfMonths, Mydropbox):
+def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps, NumberOfMonths, Plotpath):
     ''' Trains surrogate models.... '''
     print('In TrainSurrogateModels')
 
@@ -87,7 +87,6 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
     from mpl_toolkits import mplot3d
 
     SurrogateModelList = []
-    Plotpath = Mydropbox + 'Projects/PredictingFatalities/SurrogateModels/'
     log_scale_value = np.array([np.log1p(0), np.log1p(1), np.log1p(10), np.log1p(100), np.log1p(1000), np.log1p(10000)])
     log_scale_naming = ['0','1', '10', '100', '1000','10000']
 
@@ -208,8 +207,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         
         Prediction = Ensemble_df[f'step_pred_{step}']
         for IVset in IV_list:
-            print('s' + str(step) + ' ' + IVset['Name']
-            ModelDict = { 
+            ModelDict = {
                 'Modelname':   's' + str(step) + ' ' + IVset['Name'],
                 'Step':        step,
                 'Columns':     IVset['Columns'],
