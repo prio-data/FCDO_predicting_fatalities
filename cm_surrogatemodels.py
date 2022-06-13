@@ -56,7 +56,7 @@ from pathlib import Path
 
 def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps, NumberOfMonths, Plotpath):
     ''' Trains surrogate models.... '''
-    print('In TrainSurrogateModels')
+#    print('In TrainSurrogateModels')
 
     # Expand the predictions dataset with predictors that are lagged appropriately
 
@@ -138,16 +138,29 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             'rotation':         30
         },
         {
-            'Name':       'Population and conflict history',
-            'Shortname':  'PopCH',
-            'Columns':    ['wdi_sp_pop_totl','ln_ged_sb_dep'],
-            'Data':       Ensemble_df[[f'pop_s_{step}',f'depvar_s_{step}']],
-            'GAM':        LinearGAM(s(0,n_splines=10) + s(1,n_splines=10)),
-            'Predictors': ['Population','Conflict, t-1'],
+            'Name':      'Neighborhood conflict',
+            'Shortname': 'NCH',
+            'Columns':    ['splag_1_decay_ged_sb_5'],
+            'Data':      Ensemble_df[[f'nb_conflict_s_{step}']],
+            'GAM':       LinearGAM(s(0,n_splines=5)),
+            'Predictors': ['Conflict in neighborhood'],
             'scale_value':  log_scale_value, 
             'scale_naming': log_scale_naming,
             'rotation':         30
         },
+        {
+            'Name':      'Topics: conflict and conflict stock',
+            'Shortname': 'Topic10',
+            'Columns':    ['ste_theta10','ste_theta10_stock'],
+            'Data':      Ensemble_df[[f'ste10_conflict_s_{step}',f'ste10stock_conflict_s_{step}']],
+            'GAM':       LinearGAM(s(0,n_splines=5) + s(1,n_splines=5)),
+            'Predictors': ['Share of conflict in news','Share of conflict in news, stock'],
+            'scale_value':  [0, 0.25, 0.5, 0.75, 1], 
+            'scale_naming': [0, 0.25, 0.5, 0.75, 1],
+            'rotation':         30
+        },
+        ]
+        Other_models = [
         {
             'Name':      'Infant mortality and conflict history',
             'Shortname': 'IMRCH',
@@ -155,6 +168,17 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             'Data':      Ensemble_df[[f'imr_s_{step}',f'depvar_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=10) + s(1,n_splines=10)),
             'Predictors': ['Infant mortality','Conflict, t-1'],
+            'scale_value':  log_scale_value, 
+            'scale_naming': log_scale_naming,
+            'rotation':         30
+        },
+        {
+            'Name':       'Population and conflict history',
+            'Shortname':  'PopCH',
+            'Columns':    ['wdi_sp_pop_totl','ln_ged_sb_dep'],
+            'Data':       Ensemble_df[[f'pop_s_{step}',f'depvar_s_{step}']],
+            'GAM':        LinearGAM(s(0,n_splines=10) + s(1,n_splines=10)),
+            'Predictors': ['Population','Conflict, t-1'],
             'scale_value':  log_scale_value, 
             'scale_naming': log_scale_naming,
             'rotation':         30
@@ -181,34 +205,13 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             'scale_naming': log_scale_naming,
             'rotation':         30
         },
-        {
-            'Name':      'Neighborhood conflict',
-            'Shortname': 'NCH',
-            'Columns':    ['splag_1_decay_ged_sb_5'],
-            'Data':      Ensemble_df[[f'nb_conflict_s_{step}']],
-            'GAM':       LinearGAM(s(0,n_splines=5)),
-            'Predictors': ['Conflict in neighborhood'],
-            'scale_value':  log_scale_value, 
-            'scale_naming': log_scale_naming,
-            'rotation':         30
-        },
-        {
-            'Name':      'Topics: conflict and conflict stock',
-            'Shortname': 'Topic10',
-            'Columns':    ['ste_theta10','ste_theta10_stock'],
-            'Data':      Ensemble_df[[f'ste10_conflict_s_{step}',f'ste10stock_conflict_s_{step}']],
-            'GAM':       LinearGAM(s(0,n_splines=5) + s(1,n_splines=5)),
-            'Predictors': ['Share of conflict in news','Share of conflict in news, stock'],
-            'scale_value':  [0, 0.25, 0.5, 0.75, 1], 
-            'scale_naming': [0, 0.25, 0.5, 0.75, 1],
-            'rotation':         30
-        },
         ]
         
         Prediction = Ensemble_df[f'step_pred_{step}']
         for IVset in IV_list:
             ModelDict = {
                 'Modelname':   's' + str(step) + ' ' + IVset['Name'],
+                'Shortname':   IVset['Shortname'],
                 'Step':        step,
                 'Columns':     IVset['Columns'],
                 'IVs':         IVset['Data'],
