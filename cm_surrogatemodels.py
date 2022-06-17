@@ -28,7 +28,7 @@ from views_partitioning import data_partitioner, legacy
 from stepshift import views
 import views_dataviz
 from views_runs import storage, ModelMetadata
-from views_runs.storage import store, retrieve, list, fetch_metadata
+from views_runs.storage import store, retrieve, fetch_metadata
 from views_forecasts.extensions import *
 
 # Mapper
