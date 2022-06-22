@@ -1,5 +1,11 @@
 ## Package checker
 
+if(!require(tictoc,quietly = T)){
+  cat('Installing tictoc...', "\n")
+  install.packages("tictoc",repos = "https://cloud.r-project.org")
+  require(tictoc)
+  cat('tictoc installed...', "\n")
+}
 
 if(!require(ranger,quietly = T)){
   cat('Installing ranger...', "\n")
