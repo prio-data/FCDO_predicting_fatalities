@@ -26,7 +26,7 @@ def FetchTable(Queryset, name):
 def FetchData(run_id):
     print('Fetching data using querysets; returns as list of dictionaries containing datasets')
     Datasets = []
-    if run_id == 'Fatalities001':
+    if run_id == 'fatalities001':
         Datasets.append(FetchTable((Queryset("hh_fatalities_ged_ln_ultrashort", "country_month")),'baseline'))
         Datasets.append(FetchTable((Queryset("hh_fatalities_ged_acled_ln", "country_month")),'conflictlong_ln'))
         Datasets.append(FetchTable((Queryset("fat_cm_conflict_history", "country_month")),'conflict_ln'))
@@ -103,7 +103,7 @@ def FetchData(run_id):
 def FetchData_pgm(run_id):
     print('Fetching data using querysets; returns as list of dictionaries containing datasets')
     Datasets = []
-    if run_id == 'Fatalities001':
+    if run_id == 'fatalities001':
         Datasets.append(FetchTable((Queryset("hh_fat_pgm_baseline", "priogrid_month")),'baseline'))
         Datasets.append(FetchTable((Queryset("hh_fat_pgm_conflictlong", "priogrid_month")),'conflictlong'))
         Datasets.append(FetchTable((Queryset("fat_escwa_drought_vulnerability_pgm", "priogrid_month")),'escwa_drought'))
